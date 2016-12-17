@@ -1,19 +1,29 @@
 // your code here:
-var time = 0
-var timer
-$('#start').click(function () {
-  timer = setInterval(function () {
-    time += 1
-    $('#timer').text('Time elapsed: ' + time)
-  }, 1000)
-})
+var timer = {
+  seconds: 0,
+  timerId: 0,
 
-$('#pause').click(function () {
-  clearInterval(timer)
-})
+  updateTime: function updateTime () {
+    this.seconds += 1
+    $('#timer').text('Time elapsed: ' + this.seconds)
+  },
 
-$('#reset').click(function () {
-  clearInterval(timer)
-  time = 0
-  $('#timer').text('Stop Watch')
-})
+  setupListeners: function () {
+    $('#start').click(function () {
+      clearInterval(this.timerId)
+      this.timerId = setInterval(this.updateTime.bind(this), 1000)
+    }.bind(this)),
+
+    $('#pause').click(function () {
+      clearInterval(this.timerId)
+    }.bind(this))
+
+    $('#reset').click(function () {
+      clearInterval(this.timerId)
+      this.seconds = 0
+      $('#timer').text('Stop Watch')
+    }.bind(this))
+  }
+}
+
+timer.setupListeners()
